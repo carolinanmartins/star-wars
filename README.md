@@ -8,3 +8,5 @@ docker build -t starwars-api .
 docker run -it starwars-api
 
 # Start SpringBootApplication at com.api.challenge.ApiChallengeApplication
+
+# Access localhost:8080/swagger-ui.html with credentials in yml

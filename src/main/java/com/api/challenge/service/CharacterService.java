@@ -1,5 +1,6 @@
 package com.api.challenge.service;
 
+import com.api.challenge.client.rest.StarWarsFeignClient;
 import com.api.challenge.config.SwapiProperties;
 import com.api.challenge.domain.Character;
 import com.api.challenge.repository.CharacterRepository;
@@ -13,11 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.List;
 
 /**
@@ -29,6 +25,8 @@ import java.util.List;
 @Transactional
 public class CharacterService {
 
+    private StarWarsFeignClient starWarsFeignClient;
+
     private final SwapiProperties swapiProperties;
 
     private final CharacterRepository characterRepository;
@@ -38,27 +36,18 @@ public class CharacterService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public ResponseEntity<List<CharacterDTO>> searchCharacters() {
-        HttpClient httpClient = HttpClient.newHttpClient();
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(swapiProperties.baseUrl() + "people"))
-                .build();
-
+        ResponseDTO responseDTO = starWarsFeignClient.getStarWarsCharacters();
         try {
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-            String responseBody = response.body();
-
-            if (responseBody != null) {
-                ResponseDTO responseDTO = objectMapper.readValue(responseBody, ResponseDTO.class);
-                for(CharacterDTO character : responseDTO.getResults()) {
+            if (responseDTO != null) {
+                for (CharacterDTO character : responseDTO.getResults()) {
                     save(character);
                 }
                 return ResponseEntity.ok(responseDTO.getResults());
             }
             return ResponseEntity.notFound().build();
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            log.error("An error occurred when trying to access: " + swapiProperties.baseUrl());
+            return ResponseEntity.internalServerError().build();
         }
     }
 

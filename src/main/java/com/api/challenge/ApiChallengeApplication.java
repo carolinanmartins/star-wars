@@ -1,15 +1,16 @@
 package com.api.challenge;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @ConfigurationPropertiesScan("com.api.challenge.config")
 @SpringBootApplication
-//@ComponentScan(basePackages = {"com.api.challenge.service", "com.api.challenge.service.mapper"})
+@EnableFeignClients
+@OpenAPIDefinition(info = @Info(title = "Starwars API", version = "1.0", description = "Starwars API"))
 public class ApiChallengeApplication {
 
     public static void main(String[] args) {

@@ -1,15 +1,20 @@
 package com.api.challenge.domain;
 
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.proxy.HibernateProxy;
 
+import javax.persistence.Column;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.*;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @jakarta.persistence.Entity
 @jakarta.persistence.Table(name = "characters")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -69,4 +74,20 @@ public class Character implements Serializable {
 
     @Column(nullable = false)
     private String url;
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        Character character = (Character) o;
+        return getId() != null && Objects.equals(getId(), character.getId());
+    }
+
+    @Override
+    public final int hashCode() {
+        return getClass().hashCode();
+    }
 }
