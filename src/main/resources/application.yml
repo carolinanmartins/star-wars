@@ -41,6 +41,7 @@ spring:
             connectTimeout: 1000
             readTimeout: 30000
             loggerLevel: FULL
+            retryer: com.api.challenge.client.rest.FeignRetryer
   api-docs:
     path: /star-wars-api
   show-actuator: true

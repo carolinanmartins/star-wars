@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1
+  jpa:
+    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+  cloud:
+    openfeign:
+      client:
+        config:
+          starWarsClient:
+            url: https://swapi.dev/api/fake-test
+  security:
+    user:
+      name: starwarsadmin
+      password: 5*v3Duez&FHyM#cS

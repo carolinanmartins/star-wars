@@ -14,6 +14,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
 @RequiredArgsConstructor
 @jakarta.persistence.Entity
 @jakarta.persistence.Table(name = "characters")

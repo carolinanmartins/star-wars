@@ -1,12 +1,5 @@
-# star-wars
+# star-wars api  
 
-# To build a Docker image:
-docker build -t starwars-api .
+# run Dockerfile
 
-
-# Run container based on the image:
-docker run -it starwars-api
-
-# Start SpringBootApplication at com.api.challenge.ApiChallengeApplication
-
-# Access localhost:8080/swagger-ui.html with credentials in yml
+# Access http://localhost:3000/swagger-ui/index.html

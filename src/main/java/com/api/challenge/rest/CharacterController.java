@@ -41,7 +41,6 @@ public class CharacterController {
         security = @SecurityRequirement(name = "Bearer"),
         responses = {@ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CharacterDTO.class)))), @ApiResponse(responseCode = "404", description = "Characters not found", content = @Content)
     })
-//    @PreAuthorize("hasAuthority(\"" + PermissionConstants.API_VIEW + "\")")
     public ResponseEntity<List<CharacterDTO>> getCharacters() {
         return characterService.searchCharacters();
     }

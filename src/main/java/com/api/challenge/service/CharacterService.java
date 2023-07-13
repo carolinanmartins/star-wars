@@ -7,7 +7,7 @@ import com.api.challenge.repository.CharacterRepository;
 import com.api.challenge.service.dto.CharacterDTO;
 import com.api.challenge.service.dto.ResponseDTO;
 import com.api.challenge.service.mapper.CharacterMapper;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ import java.util.List;
 @Transactional
 public class CharacterService {
 
-    private StarWarsFeignClient starWarsFeignClient;
+    private final StarWarsFeignClient starWarsFeignClient;
 
     private final SwapiProperties swapiProperties;
 
@@ -33,8 +33,7 @@ public class CharacterService {
 
     private final CharacterMapper characterMapper;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
+    @HystrixCommand(commandKey = "getAllStarWarsCharacters", fallbackMethod = "defaultCharacters")
     public ResponseEntity<List<CharacterDTO>> searchCharacters() {
         ResponseDTO responseDTO = starWarsFeignClient.getStarWarsCharacters();
         try {
@@ -61,5 +60,12 @@ public class CharacterService {
         Character character = characterMapper.toEntity(characterDto);
         character = characterRepository.save(character);
         characterMapper.toDto(character);
+    }
+
+    /**
+     * Fallback method
+     */
+    private ResponseEntity<List<CharacterDTO>> defaultCharacters() {
+        return ResponseEntity.ok(List.of());
     }
 }
